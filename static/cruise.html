@@ -1,0 +1,165 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>千川巡航 · 多账户调控</title>
+  <link rel="stylesheet" href="/cruise.css"><link rel="stylesheet" href="/plan-metrics.css"><link rel="stylesheet" href="/activity-log.css"><script src="/plan-metrics.js" defer></script><script src="/batch-chase.js" defer></script><script src="/live-close.js" defer></script><script src="/official-workflow.js" defer></script><script src="/activity-log.js" defer></script><script src="/hybrid-chase.js" defer></script><script src="/branding.js" defer></script><script src="/cruise.js" defer></script>
+</head>
+<body>
+<div id="cruise-app" class="cruise-shell">
+  <header class="topbar">
+    <div class="branding-header">
+      <a class="brand" href="/cruise">
+        <span class="brand-mark" aria-hidden="true"><span id="brand-fallback">巡</span><img id="brand-icon" alt="" hidden></span>
+        <span class="brand-copy"><span id="brand-name">千川巡航</span><small id="brand-subtitle">多账户调控台</small></span>
+      </a>
+      <button id="branding-edit" class="branding-edit" title="自定义名称和图标">自定义</button>
+    </div>
+    <div class="top-status">
+      <span id="connection-status" class="connection">正在读取连接</span>
+      <span class="confirmation-mode">正在读取执行模式</span>
+      <button id="refresh-all" class="subtle">刷新状态</button>
+      <a href="/monitor" class="top-link">监测与账户管理</a>
+    </div>
+  </header>
+
+  <dialog id="branding-dialog" class="branding-dialog" aria-labelledby="branding-heading">
+    <form id="branding-form">
+      <h2 id="branding-heading">自定义名称和图标</h2><p class="muted">保存后应用到左上角，刷新页面会保留。</p>
+      <div class="branding-preview"><span class="brand-mark" aria-hidden="true"><span id="branding-preview-fallback">巡</span><img id="branding-preview-icon" alt="" hidden></span><div><strong id="branding-preview-name">千川巡航</strong><small id="branding-preview-subtitle">多账户调控台</small></div></div>
+      <label for="branding-name">名称<input id="branding-name" maxlength="64" required autocomplete="off" placeholder="填写你的名称"></label>
+      <label for="branding-subtitle">副标题（可留空）<input id="branding-subtitle" maxlength="96" autocomplete="off" placeholder="例如：多账户调控台"></label>
+      <label for="branding-file">上传图标<input id="branding-file" type="file" accept="image/png,image/jpeg,image/webp"></label>
+      <p class="muted branding-file-hint">支持PNG、JPG、WebP，2MB以内；自动缩放为图标，保留图片比例。</p>
+      <button id="branding-remove-icon" class="secondary" type="button">移除图标</button>
+      <p id="branding-feedback" class="branding-feedback" role="status" aria-live="polite"></p>
+      <div class="branding-actions"><button id="branding-reset" class="secondary" type="button">恢复默认</button><span></span><button id="branding-cancel" class="secondary" type="button">取消</button><button id="branding-save" type="submit">保存</button></div>
+    </form>
+  </dialog>
+
+  <dialog id="project-group-dialog" class="branding-dialog project-dialog" aria-labelledby="project-dialog-heading">
+    <form id="project-group-form">
+      <h2 id="project-dialog-heading">项目与账户分组</h2>
+      <p class="muted">按项目名称与角色（直播 / 图文 / 达人）整理左侧导航栏。仅保存在当前浏览器本地，不会修改后台 Chrome 分组（<code>tab_group</code>）或投放执行逻辑。</p>
+      <datalist id="project-name-suggestions"></datalist>
+      <div id="project-group-rows" class="project-dialog-rows"></div>
+      <p id="project-group-feedback" class="branding-feedback" role="status" aria-live="polite"></p>
+      <div class="branding-actions">
+        <button id="project-group-reset" class="secondary" type="button">恢复默认分组</button>
+        <span></span>
+        <button id="project-group-cancel" class="secondary" type="button">取消</button>
+        <button id="project-group-save" type="submit">保存分组</button>
+      </div>
+    </form>
+  </dialog>
+
+  <aside class="account-rail">
+    <div class="rail-header">
+      <div class="rail-title">项目与账户<span id="account-count" class="rail-count">—</span></div>
+      <button id="project-manage-btn" class="rail-action-btn" type="button" title="按项目归类账户（直播/图文/达人）">管理分组</button>
+    </div>
+    <div class="rail-tools">
+      <input id="account-search" type="search" placeholder="搜索项目 / 账户 / ID" autocomplete="off" aria-label="搜索项目或账户">
+      <div class="rail-filter-chips" role="group" aria-label="筛选账户类型">
+        <button type="button" class="rail-chip active" data-rail-filter="all">全部</button>
+        <button type="button" class="rail-chip" data-rail-filter="running">运行中</button>
+        <button type="button" class="rail-chip" data-rail-filter="live">直播</button>
+        <button type="button" class="rail-chip" data-rail-filter="product">图文</button>
+        <button type="button" class="rail-chip" data-rail-filter="talent">达人</button>
+      </div>
+    </div>
+    <nav id="account-list" aria-label="选择投放账户"><p class="empty">正在读取账户</p></nav>
+    <div class="rail-footer">
+      <p class="rail-note">各户参数、巡航周期与调控记录分别保存。</p>
+      <div class="rail-links">
+        <a href="/monitor#account-registry" class="rail-manage">管理监测账户</a>
+        <a href="/api-setup" class="rail-manage">官方 API 接入</a>
+      </div>
+    </div>
+  </aside>
+
+  <main>
+    <p id="status-read" class="muted" role="status" aria-live="polite">正在读取工作台状态，可以稍后点「刷新状态」重试。</p>
+    <div id="notice" role="status" aria-live="polite" hidden></div>
+    <div id="switch-prompt" class="switch-prompt" hidden></div>
+
+    <section class="account-command-bar">
+      <header class="account-heading">
+        <div class="account-heading-left">
+          <div class="account-title-meta">
+            <span id="account-project-tag" class="project-pill" hidden></span>
+            <p id="account-scene" class="scene-label">账户调控</p>
+          </div>
+          <div class="account-title-row">
+            <h1 id="account-name">读取账户中</h1>
+            <p id="account-id" class="muted"></p>
+          </div>
+        </div>
+        <div id="assessment" class="assessment"></div>
+      </header>
+      <div class="account-substrip">
+        <section id="account-entry" class="entry-inline-bar" aria-label="按账户ID自动进入"></section>
+        <section id="guarantee-panel" class="guarantee-panel" aria-label="成本保障检查"></section>
+      </div>
+    </section>
+
+    <nav class="workspace-tabs" aria-label="调控工作区">
+      <button data-view="plans" class="active" aria-selected="true">数据与主计划</button>
+      <button data-view="chase" aria-selected="false">智能体追投<span id="tab-chase-badge" class="tab-badge" hidden></span></button>
+      <button data-view="rules" aria-selected="false">巡航规则与运行<span id="tab-rules-dirty" class="tab-badge warn" hidden>未保存</span></button>
+      <button data-view="ledger" aria-selected="false">调控与运行记录</button>
+    </nav>
+
+    <section id="view-plans" class="workspace-view">
+      <section id="account-metrics" class="section-block metrics-hero" aria-label="账户数据观察"></section>
+      <section class="section-block card-section plan-table-section">
+        <div class="section-heading"><div><h2>计划数据与排序</h2><p>消耗、各口径ROI与成交分别展示；统计范围和更新时间保留在每一行。</p></div></div>
+        <div id="plan-table"></div>
+      </section>
+      <section id="legacy-main-plan-section" class="section-block card-section">
+        <div class="section-heading"><div><h2>主计划调控</h2><p>直播与图文账户分别选择明确计划，先准备调控单，再核对确认。</p></div><span id="main-connection" class="state-tag"></span></div>
+        <div id="main-plan-form" class="plan-form"></div>
+      </section>
+      <section id="official-workflow-panel" class="section-block card-section" hidden></section>
+      <section id="live-close-panel" class="section-block card-section" hidden></section>
+    </section>
+
+    <section id="view-chase" class="workspace-view" hidden>
+      <section id="hybrid-chase-panel" hidden></section>
+    </section>
+
+    <section id="view-rules" class="workspace-view" hidden>
+      <div class="card-section">
+        <div class="section-heading"><div><h2>本户巡航</h2><p>已授权的功能按本户保存规则自动执行；未开启自动授权时逐单确认。</p></div><div class="save-tools"><span id="dirty-state" class="muted">参数已保存</span><button id="reload-profile" class="secondary">放弃草稿并重读</button><button id="save-profile">保存本户参数</button></div></div>
+        <div id="lane-controls" class="lane-controls"></div>
+        <details class="run-settings"><summary>运行周期、操作时段与停播保护</summary><div id="runtime-fields" class="settings-fields"></div></details>
+      </div>
+      <div class="card-section section-block">
+        <div id="feature-tabs" class="feature-tabs" role="tablist" aria-label="原版巡航功能"></div>
+        <section id="feature-editor" class="feature-editor"></section>
+      </div>
+      <section id="batch-chase-panel" class="section-block card-section" hidden></section>
+      <section class="section-block card-section"><div class="section-heading"><div><h2>本户规则命中</h2><p id="scan-summary">尚未扫描</p></div></div><div id="proposals"></div><details class="diagnostics"><summary>查看未命中与缺失原因</summary><div id="scan-diagnostics"></div></details></section>
+    </section>
+
+    <section id="view-ledger" class="workspace-view" hidden>
+      <div class="ledger-jump-bar" aria-label="记录板块快捷跳转">
+        <a href="#ledger-actions-card" class="ledger-jump-link">本户调控记录</a>
+        <a href="#ledger-runtime-card" class="ledger-jump-link">巡航运行日志</a>
+      </div>
+      <section id="ledger-actions-card" class="card-section">
+        <div class="section-heading"><div><h2>本户调控记录</h2><p>查看预算、暂停、追投与ROI调整的具体内容及执行结果。</p></div></div>
+        <div id="activity-log"></div>
+        <details id="legacy-records" class="section-block" hidden><summary>浏览器调控单与待处理动作</summary><div id="action-ledger"></div></details>
+      </section>
+      <section id="ledger-runtime-card" class="card-section section-block">
+        <div class="section-heading"><div><h2>巡航运行日志</h2><p>巡查、等待和错误在这里查看；实际调控请看上方记录。</p></div></div>
+        <div id="runtime-logs" class="table-scroll"></div>
+      </section>
+    </section>
+
+    <aside id="action-review" class="action-review" aria-label="核对单条调控" hidden></aside>
+    <p class="page-footnote">调控单绑定账户、计划及当前设置。页面变化或审批过期时，需要重新准备。</p>
+  </main>
+</div>
+</body></html>

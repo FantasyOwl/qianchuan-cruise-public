@@ -1,0 +1,208 @@
+.metric-entry-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.metric-entry {
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 14px 18px;
+  box-shadow: var(--shadow-sm);
+}
+
+.metric-entry--active {
+  border-top: 3px solid var(--teal);
+  order: -1;
+}
+
+.metric-entry--quiet {
+  background: #f8fafd;
+  border-color: #dde6f0;
+  opacity: .84;
+}
+
+.metric-entry-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-bottom: 8px;
+}
+
+.metric-entry-head h3 {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.metric-entry-stamp {
+  font-size: 11px;
+  color: var(--muted);
+}
+
+.metric-summary {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(105px, 1fr));
+  gap: 10px 16px;
+  padding: 10px 0;
+  border-top: 1px solid #e3ebf3;
+  border-bottom: 1px solid #e3ebf3;
+}
+
+.metric-summary span {
+  display: block;
+  font-size: 11px;
+  color: var(--muted);
+}
+
+.metric-summary strong {
+  font-size: 20px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  color: var(--ink);
+}
+
+.metric-entry--quiet .metric-summary strong {
+  font-size: 16px;
+  color: var(--ink-secondary);
+}
+
+.metric-provenance {
+  font-size: 11px;
+  color: var(--muted);
+  line-height: 1.6;
+  margin: 7px 0 0;
+}
+
+.metric-tools {
+  display: flex;
+  gap: 12px;
+  align-items: flex-end;
+  flex-wrap: wrap;
+  margin: 0 0 12px;
+}
+
+.metric-tools label {
+  font-size: 12px;
+  color: var(--ink-secondary);
+  min-width: 165px;
+}
+
+.metric-tools input,
+.metric-tools select {
+  display: block;
+  margin-top: 5px;
+}
+
+.metric-tools label:first-child {
+  flex: 1;
+  min-width: 220px;
+}
+
+.metric-column-choices {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(140px, 1fr));
+  gap: 9px;
+  padding: 14px;
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  margin: 8px 0;
+}
+
+.metric-column-choices label {
+  font-size: 12px;
+}
+
+.metrics-grid {
+  overflow: auto;
+  max-height: 440px;
+  border: 1px solid #cbdbe7;
+  border-radius: var(--radius-sm);
+  background: #fff;
+  margin-top: 8px;
+}
+
+.metrics-grid table {
+  border-collapse: separate;
+  border-spacing: 0;
+  min-width: 100%;
+  font-variant-numeric: tabular-nums;
+}
+
+.metrics-grid th {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  white-space: nowrap;
+  background: #eaf1f8;
+}
+
+.metrics-grid th button {
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  color: #284f72;
+  font-weight: 600;
+  font-size: 12px;
+  min-height: 28px;
+  padding: 4px;
+}
+
+.metrics-grid th button:hover:not(:disabled) {
+  background: #d5e5f2;
+}
+
+.metrics-grid td {
+  white-space: nowrap;
+  font-size: 12px;
+}
+
+.metrics-grid td:not(:first-child) {
+  text-align: right;
+}
+
+.metrics-grid .name-cell {
+  min-width: 220px;
+  max-width: 380px;
+  white-space: normal;
+}
+
+.metrics-grid .name-cell small {
+  display: block;
+  color: var(--muted);
+  font-size: 11px;
+}
+
+.metrics-grid tbody tr:hover {
+  background: #f0f6fb;
+}
+
+#metric-columns {
+  font-size: 12px;
+  margin-bottom: 8px;
+}
+
+@media (max-width: 960px) {
+  .metric-entry-grid {
+    grid-template-columns: 1fr;
+  }
+  .metric-summary {
+    grid-template-columns: repeat(2, minmax(120px, 1fr));
+  }
+  .metric-column-choices {
+    grid-template-columns: repeat(2, minmax(120px, 1fr));
+  }
+}
+
+@media (max-width: 540px) {
+  .metric-tools label {
+    width: 100%;
+  }
+  .metric-summary strong {
+    font-size: 17px;
+  }
+}

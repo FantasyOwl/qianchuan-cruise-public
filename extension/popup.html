@@ -1,0 +1,12 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><title>千川监测与网页执行</title><link rel="stylesheet" href="popup.css"></head>
+<body><h1>多账户监测 · 网页执行</h1><p>账户和指定Chrome分组从本机8877配置读取。监测每分钟一次；默认只读，未配置或未启用的账户不读取。</p>
+<label for="token">本地配对码</label><input id="token" type="password" autocomplete="off" placeholder="从8877控制台复制配对码">
+<p>首次开始时由Chrome询问千川站点和本机8877的访问权限。安装后默认暂停，需你确认并开始。</p>
+<button id="save">授权并开始只读采集</button><button id="stop" class="quiet">暂停采集</button>
+<p id="status" role="status"></p><pre id="details"></pre>
+<hr><h2>单独开启网页执行</h2><p>开启后处理8877逐条确认的动作；本户F1–F6已明确授权全自动且已选择网页通道时，按保存的规则执行，F5另受原预算与批数限制。API读取限流或明确拒绝后，可由网页接替；数据缺失或结果不明不重复提交。支持已识别的直播、图文主计划预算、ROI设置和暂停，以及直播追投任务预算、时长、暂停和结束。执行后刷新同一标签核对；没有明确入口的动作保持不可用。</p>
+<p>多户巡航只读取已配置账户及分组的现有页面，不新建浏览器或标签。直播追投任务需要计划详情的调控视图；统计日期不明时不能把旧数据当作今天。开启巡航不会自动确认投放修改。</p>
+<label class="consent"><input id="control-consent" type="checkbox">我了解这是执行模式：执行8877确认单，或本户已授权规则内的F1–F6调控；F5仍受原额度限制</label>
+<button id="control-enable">开启网页执行</button><button id="control-stop" class="quiet">暂停执行</button>
+<button id="control-check" class="quiet">读取执行连接</button><p id="control-status" role="status"></p>
+<script src="access.js"></script><script src="popup.js"></script></body></html>

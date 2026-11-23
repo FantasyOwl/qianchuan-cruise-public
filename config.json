@@ -1,0 +1,28 @@
+{
+  "accounts": [],
+  "legacy_root": "legacy-import",
+  "poll_seconds": 60,
+  "rules": {
+    "max_age_seconds": 600,
+    "min_spend": 50,
+    "min_orders": 10,
+    "max_gap_minutes": 20,
+    "roi_low_ratio": 0.8,
+    "chase_roi_low_ratio": 0.7,
+    "budget_step_up": 0.2,
+    "budget_step_down": 0.1,
+    "daily_budget_up_cap": 0.5,
+    "cooldown_minutes": 60,
+    "spend_surge_ratio": 1.5,
+    "refund_spike_pp": 5,
+    "creative_ctr_decay": 0.15,
+    "control_share_cap": 0.2,
+    "cold_bid_max_target_ratio": 1.4
+  },
+  "ai": {
+    "enabled": false,
+    "endpoint": "",
+    "model": "",
+    "key_env": "QIANCHUAN_AI_API_KEY"
+  }
+}

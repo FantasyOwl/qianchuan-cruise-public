@@ -1,0 +1,11 @@
+{
+  "manifest_version": 3,
+  "name": "千川多账户监测与确认调控",
+  "version": "1.11.3",
+  "minimum_chrome_version": "106",
+  "description": "多账户直播与图文监测；单独开启网页执行后，按本户授权的F1至F6规则调控，支持API限流网页补位和原单独立回读。不读取Cookie。",
+  "permissions": ["tabGroups", "scripting", "alarms", "storage"],
+  "optional_host_permissions": ["https://qianchuan.jinritemai.com/*", "http://127.0.0.1:8877/*"],
+  "background": {"service_worker": "background.js"},
+  "action": {"default_popup": "popup.html", "default_title": "千川监测与逐条确认调控"}
+}

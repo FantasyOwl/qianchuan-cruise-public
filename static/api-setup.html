@@ -1,0 +1,20 @@
+<!doctype html>
+<html lang="zh-CN">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>千川巡航 · 官方API接入</title><link rel="stylesheet" href="/cruise.css"><link rel="stylesheet" href="/api-setup.css"><script src="/api-setup.js" defer></script></head>
+<body><header class="topbar"><a class="brand" href="/cruise">千川巡航 <small>官方 API 接入</small></a><a href="/cruise">返回多账户调控</a></header>
+<main class="api-shell">
+  <h1>连接巨量开放平台</h1><p id="stage" class="muted" role="status">正在读取接入状态</p><p id="notice" role="status" hidden></p>
+  <section class="section-block"><h2>创建应用所需资料</h2><dl><dt>应用名称</dt><dd>千川巡航</dd><dt>用途说明</dt><dd>企业内部多账户直播与商品投放管理，支持全域和乘方入口。读取账户、计划、素材及效果数据，按各账户规则生成调控单，经人工逐条确认后执行并核验结果。</dd><dt>业务范围</dt><dd>巨量千川 PC 版；按后台实际主体选择自研投放应用。</dd><dt>本机授权回调</dt><dd><code id="callback"></code></dd></dl><p class="muted">回调地址需先在开发者后台通过校验并保存。若后台不接受本机 HTTP 回调，需配置实际可用的 HTTPS 回调方案，再完成接入；当前程序不向公网开放。</p>
+    <p>已提交申请的能力：PC 全域投放管理（21010000）、千川乘方投放管理（200000064）、获取全域投放数据（22100600）、全域计划调控工具（200000037）、数据报表（22100000）。实际可授权权限以审核后的应用后台为准。</p>
+    <a href="https://open.oceanengine.com/developer/admin/message" target="_blank" rel="noreferrer">打开开发者后台</a>
+  </section>
+  <section class="section-block"><h2>保存本机应用配置</h2><form id="app-form" autocomplete="off"><div class="settings-fields">
+    <label>App ID<input id="app-id" inputmode="numeric" required placeholder="保持完整整数"></label>
+    <label>应用 Secret<input id="app-secret" type="password" autocomplete="new-password" placeholder="只在本机填写；已保存时可留空"></label>
+    <label class="wide">后台显示的授权 URL<input id="authorization-url" type="url" required placeholder="与本应用、上方回调地址对应"></label>
+    <label class="wide">申请的 Scope 权限编号<input id="scope-ids" required placeholder="按后台实际编号填写，用逗号分隔"></label>
+    </div><button type="submit" disabled>加密保存应用配置</button><span id="secret-state" class="muted"></span></form><p class="muted">Secret 和 Token 使用当前 Windows 用户加密保存，不回显、不写入日志、不进入源码交付包。更换应用或权限配置将清除本机旧授权。</p>
+  </section>
+  <section class="section-block"><h2>授权与连接检查</h2><p>账户管理员在官方页面核对账户和权限后完成授权。多个登录账号可分别建立连接。</p><div class="authorize-row"><label>本次授权名称<input id="grant-label" value="我的千川账户" maxlength="50"></label><button id="authorize" disabled>前往官方授权</button></div><div id="grants"></div></section>
+  <section class="section-block"><h2>读取已登记账户</h2><p>按本户所选“全域／乘方”入口读取今天的消耗、整体支付 ROI 和成交数据。选择两者时分别展示，接口缺失字段保持空值。已授权并启用监测的账户约5分钟自动更新一次。</p><p><a href="/monitor#account-registry">设置每户的投放入口</a></p><div class="settings-fields"><label>账户<select id="account-select"></select></label><label>授权连接<select id="grant-select"></select></label></div><button id="read-account" disabled>读取今天账户数据</button><div id="readings"></div><p class="muted">当前接入阶段：应用配置、OAuth、Token 刷新、授权账户、账户汇总和计划报表。直播素材报表、成交/ROI/放量追投、任务暂停及增预算/延时、主计划预算/ROI/暂停、起量和下播控量排程已接入逐单确认。首批示例分组A成交追投已真实创建并回读；其余写入路径已通过模拟回归，需分别实投验收。自动条件缺值会明确说明，不以其他指标代替。现有浏览器调控单不会转入 API 执行。</p></section>
+</main></body></html>

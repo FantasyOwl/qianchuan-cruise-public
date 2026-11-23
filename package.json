@@ -1,0 +1,6 @@
+{
+  "name": "qianchuan-local-monitor-tests",
+  "private": true,
+  "scripts": {"test:browser-control": "node --test tests/test_browser_driver.cjs tests/test_browser_worker.cjs"},
+  "devDependencies": {"jsdom": "26.1.0"}
+}
